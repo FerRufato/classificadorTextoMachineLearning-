@@ -1,72 +1,112 @@
-
 # Classificador de Texto com Machine Learning
 
-Este projeto tem como objetivo construir um classificador de textos curtos em Python, capaz de identificar a qual categoria (tecnologia, esportes ou política) um texto pertence. Ele utiliza machine learning supervisionado com Scikit-learn.
+Este projeto em Python treina um classificador de textos curtos para identificar a qual das seis categorias um texto pertence: **tecnologia**, **esportes**, **política**, **saúde**, **entretenimento** e **negócios**.
 
-## 💡 O que este projeto faz
+## 💡 Funcionalidades
 
-- Classifica textos curtos em categorias pré-definidas.
-- Usa aprendizado supervisionado com o algoritmo Naive Bayes.
-- Apresenta relatório de desempenho com métricas de avaliação.
+- Classificação de textos em categorias pré-definidas.
+- Aprendizado supervisionado usando Multinomial Naive Bayes.
+- Métricas de desempenho: precisão, recall, f1-score e acurácia no conjunto de teste.
 
 ## 📁 Estrutura do Projeto
 
-- `python_classificador.py`: Script principal que realiza:
-  - Vetorização dos textos com TF-IDF
-  - Treinamento com MultinomialNB
-  - Avaliação com classification_report
-
-## ⚙️ Como funciona
-
-1. **Entrada dos dados**: Lista de frases e suas categorias corretas.
-2. **Vetorização**: Os textos são transformados em vetores numéricos usando TF-IDF.
-3. **Treinamento**: O modelo aprende os padrões com base nos dados.
-4. **Teste e Avaliação**: O modelo é avaliado com dados novos e gera um relatório de desempenho.
-
-## 🧠 Técnicas usadas
-
-- Aprendizado supervisionado
-- Vetorização com TfidfVectorizer
-- Classificação com Multinomial Naive Bayes
-- Avaliação com classification_report (precisão, recall, f1-score, acurácia)
-- Remoção de stopwords em português
-
-## 📊 Exemplo de relatório gerado
-
 ```
-              precision    recall  f1-score   support
-
-    esportes       1.00      1.00      1.00         1
-    política       0.50      0.50      0.50         2
-  tecnologia       0.50      0.50      0.50         2
-
-    accuracy                           0.60         5
-   macro avg       0.67      0.67      0.67         5
-weighted avg       0.60      0.60      0.60         5
+classificador-texto/
+│
+├── python_classificador.py    # Script principal
+└── README.md                  # Documentação (este arquivo)
 ```
 
-## 🚀 Possíveis Aplicações na Empresa
+### `python_classificador.py`
 
-- Classificação de mensagens de atendimento por tema
-- Análise de sentimentos ou opiniões em comentários
-- Organização automática de documentos por assunto
-- Filtragem de conteúdo por categoria
+1. **Pré-processamento**
 
-## ✅ Como executar
+   - Remove stopwords em português.
 
-1. Certifique-se de ter o Python instalado (3.8+ recomendado).
-2. Instale as dependências:
+2. **Vetorização**
+
+   - Converte textos em vetores TF–IDF uni- e bi-gramas.
+
+3. **Divisão treino/teste**
+
+   - 50% dos dados para treino, 50% para teste, com estratificação por categoria.
+
+4. **Treinamento**
+
+   - Ajusta um `MultinomialNB` nos dados de treino.
+
+5. **Avaliação**
+
+   - Gera relatório com `classification_report` e imprime a acurácia geral.
+
+## ⚙️ Fluxo de Execução
+
+1. **Coleta de dados**: listas de frases rotuladas em cada categoria.
+2. **Limpeza**: remoção de stopwords e normalização (minúsculas, remoção de pontuação, etc.).
+3. **Extração de features**: TF–IDF uni- e bi-gramas.
+4. **Divisão dos dados**: `train_test_split(..., stratify=...)`.
+5. **Treinamento**: `clf = MultinomialNB(); clf.fit(X_train, y_train)`.
+6. **Predição e métricas**: `y_pred = clf.predict(X_test)` e `classification_report`.
+
+## 🧠 Técnicas e Bibliotecas
+
+- **Aprendizado Supervisionado**
+- `scikit-learn`:
+
+  - `TfidfVectorizer`
+  - `train_test_split`
+  - `MultinomialNB`
+  - `classification_report`, `accuracy_score`
+
+- `warnings.filterwarnings("ignore")` para suprimir alertas de depuração.
+
+## 📊 Exemplo de Saída no Teste
 
 ```
-pip install scikit-learn
+✅ Acurácia geral no teste: 0.44
+▶️ Relatório detalhado no teste:
+                precision    recall  f1-score   support
+
+entretenimento       0.50      0.33      0.40        15
+      esportes       0.35      0.64      0.45        14
+      negócios       0.43      0.20      0.27        15
+      política       0.44      0.27      0.33        15
+         saúde       0.38      0.43      0.40        14
+    tecnologia       0.60      0.80      0.69        15
+
+      accuracy                           0.44        88
+     macro avg       0.45      0.45      0.42        88
+  weighted avg       0.45      0.44      0.42        88
 ```
 
-3. Execute o script:
+## 🚀 Possíveis Aplicações
 
-```
-python python_classificador.py
-```
+- Classificação automática de tickets de suporte por assunto.
+- Organização de documentos internos ou e-mails corporativos.
+- Filtragem de mensagens em redes sociais ou chats de atendimento.
 
-## 📌 Observações
+## ✅ Como Executar
 
-Este projeto é uma base para entender como funciona um classificador supervisionado. Para aplicações reais, é recomendado trabalhar com datasets maiores e modelos mais avançados.
+1. Clone este repositório.
+
+2. Crie e ative um ambiente virtual (recomendado).
+
+3. Instale as dependências:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Execute o script:
+
+   ```bash
+   python python_classificador.py
+   ```
+
+## 📌 Melhorias Futuras
+
+- Aumentar e diversificar o dataset (mais exemplos reais por categoria).
+- Incluir bi-gramas e pré-processamento avançado (stemming, lematização).
+- Testar outros classificadores (SVM, Random Forest, redes neurais).
+- Implementar validação cruzada (`StratifiedKFold`) e tuning de hiperparâmetros (`GridSearchCV`).
+- Adicionar interface web ou API REST para uso em produção.
